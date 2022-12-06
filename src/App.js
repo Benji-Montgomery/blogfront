@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useImperativeHandle, forwardRef } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import Notification from './components/Notification'
@@ -89,6 +89,35 @@ const App = () => {
     setUrl(event.target.value)
     console.log(url)
   }
+  const [visible, setVisible] = useState(false)
+  const toggleVisibility = () => {
+    setVisible(!visible)
+  }
+  const Togglable = forwardRef((props, ref) => {
+
+  
+    const hideWhenVisible = { display: visible ? 'none' : '' }
+    const showWhenVisible = { display: visible ? '' : 'none' }
+  
+  
+    useImperativeHandle(ref, () => {
+      return {
+        toggleVisibility
+      }
+    })
+  
+    return (
+      <div>
+        <div style={hideWhenVisible}>
+          <button onClick={toggleVisibility}>{props.buttonLabel}</button>
+        </div>
+        <div style={showWhenVisible}>
+          {props.children}
+          <button onClick={toggleVisibility}>cancel</button>
+        </div>
+      </div>
+    )
+  })
   const blogForm = () => (
     <section>
       <div>
@@ -100,14 +129,18 @@ const App = () => {
           onChange={handleAuthorChange}></input></h6>
           <h6>url:<input value={url}
           onChange={handleUrlChange}></input></h6>
-          <button type="submit">create</button>
+          <button type="submit" onClick={toggleVisibility}>create</button>
         </form>
       </div>
-      <h2>blogs</h2>
+    </section>
+  )
+  const blogsSection = () => (
+    <section>
+    <h2>blogs</h2>
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}
-    </section>
+      </section>
   )
   const LogoutSection = ({  }) => {
     const zoomer = () => {
@@ -148,11 +181,14 @@ const App = () => {
       {<Notification message={errorMessage} />}
 
       {user === null ?
-      loginForm() :
-      <div>
-        <p>{user.name} logged in</p>
-          <LogoutSection />
-        {blogForm()}
+        loginForm() :
+        <div>
+          <p>{user.name} logged in</p>
+            <LogoutSection />
+          <Togglable buttonLabel="create new blog">
+          {blogForm()}
+          </Togglable>
+          {blogsSection()}
         </div>
       }
 
