@@ -18,7 +18,6 @@ const App = () => {
 
   blogs.sort((a, b) => a.likes - b.likes);
   console.log(blogs)
-  console.log(user.username)
   // blog sections
   const blogStyle= {
     paddingTop: 10,

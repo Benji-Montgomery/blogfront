@@ -1,5 +1,8 @@
-import { useState } from "react"
-import { forwardRef, useImperativeHandle } from "react"
+/* eslint-disable linebreak-style */
+/* eslint-disable react/display-name */
+/* eslint-disable linebreak-style */
+import { useState } from 'react'
+import { forwardRef, useImperativeHandle } from 'react'
 import blogService from '../services/blogs'
 import app from '../App'
 
@@ -12,25 +15,25 @@ const blogStyle= {
   marginBottom: 5
 }
 
-const Blog = ({blog}) =>  {
+const Blog = ({ blog }) =>  {
   const blogs = app.blogs
-  const [liveLikes, setLiveLikes] = useState(blog.likes)
+  const [liveLikes] = useState(blog.likes)
   const Togglable = forwardRef((props, ref) => {
     const [visible, setVisible] = useState(false)
-  
+
     const hideWhenVisible = { display: visible ? 'none' : '' }
     const showWhenVisible = { display: visible ? '' : 'none' }
-  
+
     const toggleVisibility = async () => {
       setVisible(!visible)
     }
-  
+
     useImperativeHandle(ref, () => {
       return {
         toggleVisibility
       }
     })
-  
+
     return (
       <div>
         <div style={hideWhenVisible}>
@@ -68,18 +71,18 @@ const Blog = ({blog}) =>  {
     return (
       <button onClick={updateLikes}>like</button>
     )
-  
+
   }
 
 
-return (
-  <div style={blogStyle}>
-    {blog.title} 
-    <Togglable buttonLabel="show"> 
-      {blog.url} 
+  return (
+    <div style={blogStyle}>
+      {blog.title}
+      <Togglable buttonLabel="show">
+        {blog.url}
       likes: {liveLikes} <LikeButton blog={blog}/>
-    </Togglable>
-  </div>  
-)}
+      </Togglable>
+    </div>
+  )}
 
 export default Blog

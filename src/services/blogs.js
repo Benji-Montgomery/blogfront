@@ -16,7 +16,11 @@ const create = async newObject => {
 }
 
 const deleteBlog = (id) => {
-  const request = axios.delete(`${baseUrl}/${id}`)
+  console.log(id)
+  const config = {    
+    headers: { Authorization: token },  
+  }
+  const request = axios.delete(`${baseUrl}/${id}`, config)
   return request.then(response => response.data)
 }
 
