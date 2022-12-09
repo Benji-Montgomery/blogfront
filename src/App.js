@@ -17,7 +17,8 @@ const App = () => {
   const [title, setTitle] = useState('')
 
   blogs.sort((a, b) => a.likes - b.likes);
-  
+  console.log(blogs)
+  console.log(user.username)
   // blog sections
   const blogStyle= {
     paddingTop: 10,
@@ -28,10 +29,11 @@ const App = () => {
   }
   const Blog = ({blog}) =>  {
     const [liveLikes, setLiveLikes] = useState(blog.likes)
+    const [visible, setVisible] = useState(false)
 
     const Togglable = forwardRef((props, ref) => {
     
-      const [visible, setVisible] = useState(false)
+      //const [visible, setVisible] = useState(false)
       const hideWhenVisible = { display: visible ? 'none' : '' }
       const showWhenVisible = { display: visible ? '' : 'none' }
     
@@ -59,7 +61,6 @@ const App = () => {
     })
   
     const LikeButton = ({ blog }) => {
-  
       const updateLikes = (event) => {
         event.preventDefault()
         console.log(blog.likes)
@@ -82,6 +83,23 @@ const App = () => {
       )
     
     }
+
+    const DeleteButton = ({ blog }) => {
+
+      const deleteIt = (event) => {
+        event.preventDefault()
+        console.log(blog.id)
+        blogService
+          .deleteBlog(blog.id)
+      }
+      if(user.username === blog.author){
+      return (
+        <button id="gone" onClick={deleteIt}>delete!</button>
+      )}else{
+        return
+      }
+
+    }
   
   
   return (
@@ -90,6 +108,9 @@ const App = () => {
       <Togglable buttonLabel="show"> 
         {blog.url} 
         likes: {liveLikes} <LikeButton blog={blog}/>
+        <section>
+          <DeleteButton blog={blog}/>
+        </section>
       </Togglable>
     </div>  
   )}
