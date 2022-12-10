@@ -1,11 +1,14 @@
 /* eslint-disable linebreak-style */
 /* eslint-disable react/display-name */
 /* eslint-disable linebreak-style */
-import { useState } from 'react'
-import { forwardRef, useImperativeHandle } from 'react'
+import { useState, useEffect, useRef, useImperativeHandle, forwardRef } from 'react'
+import user from '../App'
 import blogService from '../services/blogs'
-import app from '../App'
-
+import Notification from '../components/Notification'
+import loginService from '../services/login'
+import LoginForm from '../components/LoginForm'
+import Togglable from '../components/Togglable'
+import BlogForm from '../components/BlogForm'
 
 const blogStyle= {
   paddingTop: 10,
@@ -14,26 +17,26 @@ const blogStyle= {
   borderWidth: 1,
   marginBottom: 5
 }
+const Blog = ({blog}) =>  {
+  const [liveLikes, setLiveLikes] = useState(blog.likes)
+  const [visible, setVisible] = useState(false)
 
-const Blog = ({ blog }) =>  {
-  const blogs = app.blogs
-  const [liveLikes] = useState(blog.likes)
   const Togglable = forwardRef((props, ref) => {
-    const [visible, setVisible] = useState(false)
-
+  
+    //const [visible, setVisible] = useState(false)
     const hideWhenVisible = { display: visible ? 'none' : '' }
     const showWhenVisible = { display: visible ? '' : 'none' }
-
+  
     const toggleVisibility = async () => {
       setVisible(!visible)
     }
-
+  
     useImperativeHandle(ref, () => {
       return {
         toggleVisibility
       }
     })
-
+  
     return (
       <div>
         <div style={hideWhenVisible}>
@@ -48,11 +51,10 @@ const Blog = ({ blog }) =>  {
   })
 
   const LikeButton = ({ blog }) => {
-
     const updateLikes = (event) => {
       event.preventDefault()
       console.log(blog.likes)
-      const likes = blog.likes +1
+      const likes = liveLikes +1
       const newBlog = {
         title: blog.title,
         author: blog.author,
@@ -63,26 +65,45 @@ const Blog = ({ blog }) =>  {
       blogService
         .update(blog.id, newBlog)
         .then(returnedBlog => {
-          console.log(returnedBlog)
-          console.log(app.blogs)
-          app.setBlogs(blogs.concat(returnedBlog))
+          setLiveLikes(returnedBlog.likes)
         })
     }
     return (
-      <button onClick={updateLikes}>like</button>
+      <button id="meow" onClick={updateLikes}>like</button>
     )
+  
+  }
+
+  const DeleteButton = ({ blog }) => {
+
+    const deleteIt = (event) => {
+      event.preventDefault()
+      console.log(blog.id)
+      console.log(user.user)
+      blogService
+        .deleteBlog(blog.id)
+    }
+    if(user.username === blog.author){
+    return (
+      <button id="gone" onClick={deleteIt}>delete!</button>
+    )}else{
+      return
+    }
 
   }
 
 
-  return (
-    <div style={blogStyle}>
-      {blog.title}
-      <Togglable buttonLabel="show">
-        {blog.url}
+return (
+  <div style={blogStyle}>
+    {blog.title} 
+    <Togglable buttonLabel="show"> 
+      {blog.url} 
       likes: {liveLikes} <LikeButton blog={blog}/>
-      </Togglable>
-    </div>
-  )}
+      <section>
+        <DeleteButton blog={blog}/>
+      </section>
+    </Togglable>
+  </div>  
+)}
 
 export default Blog

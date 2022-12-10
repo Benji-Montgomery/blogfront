@@ -4,3 +4,5 @@ build
 linebreak-style 
 App.js
 blogs.js
+src
+cypress

@@ -6,7 +6,7 @@ const LoginForm = ({
     password
 }) => {
     return (
-        <div>
+        <div className='togglableContent'>
             <h2>Login</h2>
 
             <form onSubmit={handleSubmit}>
@@ -15,6 +15,7 @@ const LoginForm = ({
                 <input
                     value={username}
                     onChange={handleUsernameChange}
+                    id='username'
                 />
                 </div>
                 <div>
@@ -23,9 +24,10 @@ const LoginForm = ({
                         type="password"
                         value={password}
                         onChange={handlePasswordChange}
+                        id='password'
                     />
                 </div>
-                <button type="submit">login</button>
+                <button type="submit" className="login" id='login'>login</button>
             </form>
         </div>
     )

@@ -16,8 +16,8 @@ const App = () => {
   const [user, setUser] = useState(null) 
   const [title, setTitle] = useState('')
 
-  blogs.sort((a, b) => a.likes - b.likes);
-  console.log(blogs)
+  blogs.sort((a, b) => b.likes - a.likes);
+  
   // blog sections
   const blogStyle= {
     paddingTop: 10,
@@ -103,9 +103,9 @@ const App = () => {
   
   return (
     <div style={blogStyle}>
-      {blog.title} 
+      Title: {blog.title} Author: {blog.author}
       <Togglable buttonLabel="show"> 
-        {blog.url} 
+        url: {blog.url} ,
         likes: {liveLikes} <LikeButton blog={blog}/>
         <section>
           <DeleteButton blog={blog}/>
@@ -151,7 +151,7 @@ const App = () => {
     }
   }
   const blogsSection = () => (
-    <section>
+    <section class="blogs">
     <h2>blogs</h2>
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
@@ -191,7 +191,7 @@ const App = () => {
       {<Notification message={errorMessage} />}
 
       {user === null ?
-        <Togglable buttonLabel='login'>
+        
           <LoginForm
             username={username}
             password={password}
@@ -199,7 +199,7 @@ const App = () => {
             handlePasswordChange={({ target }) => setPassword(target.value)}
             handleSubmit={handleLogin}
           />
-        </Togglable> :
+        :
         <div>
           <p>{user.name} logged in</p>
           <LogoutSection />
@@ -213,5 +213,6 @@ const App = () => {
     </div>
   )
 }
+
 
 export default App
